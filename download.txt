@@ -8,3 +8,7 @@ url=https://raw.githubusercontent.com/caelustudio/TreeOS/main/TreeOS.pptm
 name=TreeOS.pptm
 version=1.0.0
 size=
+
+# 应用内显示的 logo 地址（可选）。当前指向仓库里的 base64 文本，应用会自动解码；
+# 换成 logo.png 的直链同样可用。
+logo=https://raw.githubusercontent.com/caelustudio/TreeOS/main/logo.txt
