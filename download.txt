@@ -1,0 +1,10 @@
+# TreeOS 下载地址配置文件
+# Caelus Studio 应用会读取本文件获取下载直链，修改后无需重新编译应用。
+# 规则：取第一个非空、非 # 开头的行作为下载地址；支持 "url=xxx" 或直接写地址。
+
+url=https://raw.githubusercontent.com/caelustudio/TreeOS/main/TreeOS.pptm
+
+# 可选元信息（应用会读取用于展示，可留空）
+name=TreeOS.pptm
+version=1.0.0
+size=
