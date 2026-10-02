@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Caelus Studio · 作品管理台</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230B0B0B'/%3E%3Ccircle cx='16' cy='16' r='7' fill='none' stroke='%2388CCFF' stroke-width='2.5'/%3E%3C/svg%3E" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand">
+      <div class="logo"><span></span></div>
+      <div>
+        <h1>Caelus Studio · 作品管理台</h1>
+        <div class="sub">控制 TreeOS / CaelusOS 的下载开关，并发布 Caelus Studio 新版本</div>
+      </div>
+      <div class="session-chip" id="chip"></div>
+    </div>
+  </header>
+
+  <!-- 登录 -->
+  <section class="card" id="authCard">
+    <h2>管理员登录</h2>
+    <div class="desc">配置是公开可读的，但只有登录后的管理员才能修改。</div>
+
+    <div class="tabs">
+      <button class="tab active" id="tabLogin">密码登录</button>
+      <button class="tab" id="tabReg">注册管理员</button>
+    </div>
+
+    <div id="paneLogin">
+      <label class="field">
+        <span class="lbl">邮箱</span>
+        <input type="email" id="liEmail" placeholder="admin@caelus.top" autocomplete="username" />
+      </label>
+      <label class="field">
+        <span class="lbl">密码</span>
+        <input type="password" id="liPwd" placeholder="登录密码" autocomplete="current-password" />
+      </label>
+      <div class="actions">
+        <button class="primary" id="btnLogin">登录</button>
+        <span class="msg" id="liMsg"></span>
+      </div>
+    </div>
+
+    <div id="paneReg" class="hidden">
+      <label class="field">
+        <span class="lbl">邮箱</span>
+        <input type="email" id="rgEmail" placeholder="admin@caelus.top" autocomplete="username" />
+      </label>
+      <label class="field">
+        <span class="lbl">密码（注册后用于登录）</span>
+        <input type="password" id="rgPwd" placeholder="至少 6 位" autocomplete="new-password" />
+      </label>
+      <label class="field">
+        <span class="lbl">邮箱验证码</span>
+        <div class="row">
+          <input type="text" id="rgCode" placeholder="6 位验证码" />
+          <button id="btnSend" style="flex:none">获取验证码</button>
+        </div>
+        <div class="hint" id="rgHint">注册需要先验证邮箱，验证通过即自动登录。</div>
+      </label>
+      <div class="actions">
+        <button class="primary" id="btnReg">注册并登录</button>
+        <span class="msg" id="rgMsg"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- TreeOS -->
+  <section class="card">
+    <h2>TreeOS</h2>
+    <div class="desc">关闭后，桌面端下载按钮置灰并显示下方提示文案。</div>
+
+    <div class="row">
+      <label class="switch"><input type="checkbox" id="treeos_enabled" /><span class="slider"></span></label>
+      <span class="switch-text">允许下载<small>关闭后用户无法下载 TreeOS</small></span>
+    </div>
+
+    <label class="field">
+      <span class="lbl">版本号（留空则不显示版本）</span>
+      <input type="text" id="treeos_version" placeholder="例如 v1.2.0" />
+    </label>
+    <label class="field">
+      <span class="lbl">下载直链（留空则用客户端内置地址）</span>
+      <input type="text" id="treeos_url" placeholder="https://download.caelus.top/TreeOS/TreeOS.rar" />
+    </label>
+    <label class="field">
+      <span class="lbl">关闭时的提示文案</span>
+      <input type="text" id="treeos_note" placeholder="例如：TreeOS 正在维护，暂不开放下载" />
+    </label>
+  </section>
+
+  <!-- CaelusOS -->
+  <section class="card">
+    <h2>CaelusOS</h2>
+    <div class="desc">关闭后，桌面端下载按钮置灰并显示下方提示文案。</div>
+
+    <div class="row">
+      <label class="switch"><input type="checkbox" id="caelusos_enabled" /><span class="slider"></span></label>
+      <span class="switch-text">允许下载<small>关闭后用户无法下载 CaelusOS</small></span>
+    </div>
+
+    <label class="field">
+      <span class="lbl">版本号（留空则不显示版本）</span>
+      <input type="text" id="caelusos_version" placeholder="例如 v2.0.1" />
+    </label>
+    <label class="field">
+      <span class="lbl">下载直链（留空则用客户端内置地址）</span>
+      <input type="text" id="caelusos_url" placeholder="https://download.caelus.top/CaelusOS/CaelusOS.pptm" />
+    </label>
+    <label class="field">
+      <span class="lbl">关闭时的提示文案</span>
+      <input type="text" id="caelusos_note" placeholder="例如：CaelusOS 正在维护，暂不开放下载" />
+    </label>
+  </section>
+
+  <!-- APP 更新 -->
+  <section class="card">
+    <h2>Caelus Studio 应用更新</h2>
+    <div class="desc">填写的版本号高于客户端当前版本时，用户启动应用会收到更新提示。</div>
+
+    <label class="field">
+      <span class="lbl">最新版本号</span>
+      <input type="text" id="app_version" placeholder="例如 1.1.0" />
+      <div class="hint">留空表示不推送更新。客户端当前版本：<code id="curVer">读取中…</code></div>
+    </label>
+    <label class="field">
+      <span class="lbl">安装包地址</span>
+      <input type="text" id="app_url" placeholder="https://download.caelus.top/CaelusStudio/CaelusStudio.exe" />
+    </label>
+    <label class="field">
+      <span class="lbl">更新说明</span>
+      <textarea id="app_notes" placeholder="例如：新增管理台配置同步、修复若干显示问题"></textarea>
+    </label>
+    <div class="row">
+      <label class="switch"><input type="checkbox" id="app_force" /><span class="slider"></span></label>
+      <span class="switch-text">强制更新<small>开启后用户必须更新或退出，才能继续使用。请确认安装包可用后再开启</small></span>
+    </div>
+  </section>
+
+  <div class="banner">
+    <span class="dot"></span>
+    <div>
+      保存后立即生效：Caelus Studio 每次启动和打开下载页时都会读取这份配置。
+      <span id="dirtyTip" class="hidden">当前有未保存的改动。</span>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="primary" id="btnSave">保存配置</button>
+    <button id="btnReload">重新读取</button>
+    <span class="msg" id="saveMsg"></span>
+  </div>
+
+  <footer>
+    <div class="kv"><b>数据端点</b><span><code id="ep"></code></span></div>
+    <div class="kv"><b>最后更新</b><span id="updatedAt">—</span></div>
+  </footer>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@tencent-ai/workbuddy-cloud-sdk@dev/lib/index.global.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
