@@ -17,10 +17,14 @@ var cloud = WorkBuddyCloud.createWorkBuddyCloud({
   publishableKey: publicConfig.publishableKey
 });
 
+// 与客户端 TreeOSSource.LocalAppVersion 保持一致，改客户端版本时这里也要改
+var CLIENT_VERSION = "1.0.0";
+
 var FIELDS = [
   "treeos_enabled", "treeos_version", "treeos_url", "treeos_note",
   "caelusos_enabled", "caelusos_version", "caelusos_url", "caelusos_note",
-  "app_version", "app_url", "app_notes", "app_force"
+  "app_version", "app_url", "app_notes", "app_force",
+  "app_rollback", "app_rollback_to", "app_rollback_url", "app_rollback_notes"
 ];
 var TOGGLES = ["treeos_enabled", "caelusos_enabled", "app_force"];
 var pendingOtp = null;
@@ -183,6 +187,7 @@ function showMirrorNotice() {
 // ---------- 绑定 ----------
 
 $("ep").textContent = publicConfig.endpoint + "/.cloud/database/rest/app_config?select=*";
+$("curVer").textContent = CLIENT_VERSION;
 $("btnSave").onclick = saveConfig;
 $("btnReload").onclick = loadConfig;
 $("btnLogin").onclick = doLogin;
