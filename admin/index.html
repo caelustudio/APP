@@ -142,6 +142,39 @@
     </div>
   </section>
 
+  <!-- 版本回退 -->
+  <section class="card">
+    <h2>版本回退（强制）</h2>
+    <div class="desc">新版本出问题时开启：版本高于目标版本的客户端会被强制拉回目标版本。</div>
+
+    <div class="row">
+      <label class="switch"><input type="checkbox" id="app_rollback" /><span class="slider"></span></label>
+      <span class="switch-text">启用强制回退<small>开启后，所有高于目标版本的客户端都必须回退</small></span>
+    </div>
+
+    <label class="field">
+      <span class="lbl">回退目标版本</span>
+      <input type="text" id="app_rollback_to" placeholder="例如 1.0.0" />
+      <div class="hint">只有版本高于它的客户端会收到回退提示。留空则不触发回退。</div>
+    </label>
+    <label class="field">
+      <span class="lbl">回退包地址</span>
+      <input type="text" id="app_rollback_url" placeholder="留空则使用上面的安装包地址" />
+    </label>
+    <label class="field">
+      <span class="lbl">回退说明</span>
+      <textarea id="app_rollback_notes" placeholder="例如：1.1.0 存在启动崩溃，请回退到 1.0.0"></textarea>
+    </label>
+
+    <div class="banner" style="margin:16px 0 0">
+      <span class="dot" style="background:var(--danger)"></span>
+      <div>
+        回退是<b>强制</b>的：用户只能选择回退或退出应用，没有「稍后再说」。
+        确认回退包可用后再开启，问题处理完记得把开关关掉。
+      </div>
+    </div>
+  </section>
+
   <div class="banner">
     <span class="dot"></span>
     <div>
