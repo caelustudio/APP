@@ -1,0 +1,109 @@
+﻿<Window x:Class="StarIdSetupWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        mc:Ignorable="d"
+        Title="Star ID 配置"
+        Width="560" SizeToContent="Height"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        AllowsTransparency="True"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner"
+        Background="Transparent"
+        FontFamily="OPPO Sans 4.0, Microsoft YaHei"
+        UseLayoutRounding="True"
+        SnapsToDevicePixels="True">
+
+    <shell:WindowChrome.WindowChrome>
+        <shell:WindowChrome CaptionHeight="36"
+                            ResizeBorderThickness="0"
+                            GlassFrameThickness="0"
+                            CornerRadius="10"
+                            UseAeroCaptionButtons="False"/>
+    </shell:WindowChrome.WindowChrome>
+
+    <!-- 圆角窗口三件套：透明底 + 外层 Border 画圆角 + SizeChanged 里套圆角裁剪（否则子元素会从圆角处顶出来） -->
+    <Border x:Name="rootBorder" CornerRadius="10"
+            BorderBrush="{DynamicResource FrameBorder}" BorderThickness="1"
+            Background="{DynamicResource BgPrimary}"
+            ClipToBounds="True"
+            SizeChanged="RootBorder_SizeChanged">
+        <StackPanel>
+
+            <!-- 标题栏（CaptionHeight 让系统接管拖动） -->
+            <Grid Height="36" Background="{DynamicResource BgPrimary}">
+                <TextBlock Text="Star ID 配置" Margin="16,0,0,0" FontSize="13"
+                           Foreground="{DynamicResource TextSecondary}"
+                           VerticalAlignment="Center"/>
+                <Button x:Name="btnClose" Style="{StaticResource TitleBarCloseButton}"
+                        shell:WindowChrome.IsHitTestVisibleInChrome="True"
+                        Content="&#xE8BB;" HorizontalAlignment="Right"/>
+            </Grid>
+
+            <StackPanel Margin="22,4,22,22">
+
+                <TextBlock FontSize="12.5" Foreground="{DynamicResource TextMuted}"
+                           TextWrapping="Wrap" LineHeight="21">
+                    客户端 ID 在 Caelus Studio 终端控制台的「接入应用 / OAuth 2.0」页登记后生成。
+                    登记时把下面的回调地址原样填进去，并勾选「公开客户端」——桌面应用没法保存密钥，
+                    只能走 PKCE。回调地址必须与登记的内容完全一致，否则授权页会直接报错、不会跳转回来。
+                </TextBlock>
+
+                <!-- 申请入口：client_id 由用户自己去登记，这里给直达链接 -->
+                <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                    <TextBlock Text="还没有客户端 ID？" FontSize="12.5"
+                               Foreground="{DynamicResource TextMuted}"
+                               VerticalAlignment="Center"/>
+                    <Button x:Name="btnApply" Style="{StaticResource LinkButton}"
+                            Content="打开登记页" FontSize="12.5"/>
+                    <TextBlock Text="·" FontSize="12.5" Margin="4,0"
+                               Foreground="{DynamicResource TextFaint}"
+                               VerticalAlignment="Center"/>
+                    <Button x:Name="btnDocs" Style="{StaticResource LinkButton}"
+                            Content="接入文档" FontSize="12.5"/>
+                </StackPanel>
+
+                <TextBlock Text="客户端 ID" FontSize="13" Margin="0,20,0,8"
+                           Foreground="{DynamicResource TextSubtle}"/>
+                <TextBox x:Name="txtClientId" FontSize="13.5" Padding="10,8"
+                         Background="{DynamicResource BgCard}"
+                         Foreground="{DynamicResource TextPrimary}"
+                         CaretBrush="{DynamicResource TextPrimary}"
+                         BorderBrush="{DynamicResource LineStrong}" BorderThickness="1"/>
+
+                <TextBlock Text="回调地址（登记时填这个）" FontSize="13" Margin="0,16,0,8"
+                           Foreground="{DynamicResource TextSubtle}"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox x:Name="txtRedirect" FontSize="13.5" Padding="10,8"
+                             Background="{DynamicResource BgCard}"
+                             Foreground="{DynamicResource TextPrimary}"
+                             CaretBrush="{DynamicResource TextPrimary}"
+                             BorderBrush="{DynamicResource LineStrong}" BorderThickness="1"/>
+                    <Button x:Name="btnCopyRedirect" Grid.Column="1"
+                            Style="{StaticResource GhostButton}" Content="复制"
+                            Padding="14,6" FontSize="13" Margin="10,0,0,0"/>
+                </Grid>
+
+                <TextBlock FontSize="12" Margin="0,10,0,0" TextWrapping="Wrap"
+                           Foreground="{DynamicResource TextFaint}">
+                    提示：端口被占用时可以改成别的，但记得同步改登记的回调地址。
+                </TextBlock>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,24,0,0">
+                    <Button x:Name="btnCancel" Style="{StaticResource GhostButton}"
+                            Content="取消" Padding="18,7"/>
+                    <Button x:Name="btnSave" Style="{StaticResource PrimaryButton}"
+                            Content="保存" Padding="22,7" Margin="12,0,0,0"/>
+                </StackPanel>
+
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</Window>

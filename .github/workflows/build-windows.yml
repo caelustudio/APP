@@ -1,0 +1,79 @@
+name: Build Windows app
+
+# 云端编 Windows 版（Caelus Studio.exe）：
+#   - 源码放 windows-src/（VB.NET + WPF，.NET Framework 4.8）
+#   - 手动触发：Actions 页面 → Build Windows app → Run workflow
+#   - 自动触发：windows-src/ 或本文件有改动并推到 main
+# 产物会同时：① 作为 artifact 上传；② 直接提交到 main 的 Update/，download.caelus.top 立刻可取
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'windows-src/**'
+      - '.github/workflows/build-windows.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Locate project
+        id: proj
+        shell: pwsh
+        run: |
+          $p = Get-ChildItem -Path windows-src -Recurse -Filter 'Caelus Studio.vbproj' -ErrorAction SilentlyContinue |
+               Where-Object { $_.FullName -notmatch '\\(obj|bin)\.build-check' -and $_.FullName -notmatch '\\obj\\|\\bin\\' } |
+               Select-Object -First 1
+          if (-not $p) { throw 'windows-src 下没找到 Caelus Studio.vbproj' }
+          "path=$($p.FullName)" >> $env:GITHUB_OUTPUT
+          Write-Host "项目：$($p.FullName)"
+
+      - name: Build (Release)
+        shell: pwsh
+        run: |
+          msbuild "${{ steps.proj.outputs.path }}" /p:Configuration=Release /p:Platform=AnyCPU /v:minimal /nologo
+          if ($LASTEXITCODE -ne 0) { throw "MSBuild 失败（exit $LASTEXITCODE）" }
+
+      - name: Collect output
+        id: out
+        shell: pwsh
+        run: |
+          $dir = Join-Path (Split-Path "${{ steps.proj.outputs.path }}") 'bin\Release'
+          $exe = Join-Path $dir 'Caelus Studio.exe'
+          if (-not (Test-Path $exe)) { throw "没找到产物：$exe" }
+          New-Item -ItemType Directory -Force -Path Update | Out-Null
+          Copy-Item $exe 'Update\Caelus Studio.exe' -Force
+          $cfg = Join-Path $dir 'Caelus Studio.exe.config'
+          if (Test-Path $cfg) { Copy-Item $cfg 'Update\Caelus Studio.exe.config' -Force }
+          Get-Item 'Update\Caelus Studio.exe' | ForEach-Object {
+            Write-Host ("产物大小：{0:N0} 字节" -f $_.Length)
+          }
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: CaelusStudio-win
+          path: Update/Caelus Studio.exe*
+          if-no-files-found: error
+
+      - name: Publish to Update/ (commit to main)
+        shell: pwsh
+        run: |
+          git config user.name  'caelus-build-bot'
+          git config user.email 'build-bot@caelus.top'
+          $files = @('Update/Caelus Studio.exe', 'Update/Caelus Studio.exe.config') | Where-Object { Test-Path $_ }
+          git add -- $files
+          git diff --cached --quiet
+          if ($LASTEXITCODE -eq 0) { Write-Host '产物与线上一致，无需提交'; exit 0 }
+          git commit -m "Build Windows app from windows-src ($($env:GITHUB_SHA.Substring(0,7)))"
+          git push

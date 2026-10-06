@@ -1,0 +1,63 @@
+﻿<Page x:Class="ShopPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      mc:Ignorable="d"
+      Title="商店"
+      Background="{DynamicResource BgPrimary}"
+      FontFamily="OPPO Sans 4.0, Microsoft YaHei">
+
+    <Page.RenderTransform>
+        <TranslateTransform/>
+    </Page.RenderTransform>
+
+    <!-- 入场：淡入 + 上滑 -->
+    <Page.Triggers>
+        <EventTrigger RoutedEvent="Loaded">
+            <BeginStoryboard>
+                <Storyboard Completed="EnterAnim_Completed">
+                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                     From="0" To="1" Duration="0:0:0.35"/>
+                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                     From="18" To="0" Duration="0:0:0.42">
+                        <DoubleAnimation.EasingFunction>
+                            <CubicEase EasingMode="EaseOut"/>
+                        </DoubleAnimation.EasingFunction>
+                    </DoubleAnimation>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+    </Page.Triggers>
+
+    <Grid ClipToBounds="True">
+
+        <!-- 左右只留一点白，卡片尽量铺满（宽度在代码里按可用宽度算）。
+             HorizontalContentAlignment 必须显式设 Stretch，ScrollViewer 默认是 Left -->
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+                      HorizontalContentAlignment="Stretch">
+            <StackPanel Margin="32,34,32,44">
+
+                <TextBlock Text="商店" Style="{StaticResource TypeDisplay}"
+                           Foreground="{DynamicResource TextPrimary}"/>
+
+                <!-- 云端同步状态：读到数据后才显示，让人知道页面是实时的 -->
+                <TextBlock x:Name="txtSync" FontSize="12"
+                           Foreground="{DynamicResource TextFaint}"
+                           Margin="0,10,0,16" Visibility="Collapsed"/>
+
+                <!-- 商品网格 -->
+                <WrapPanel x:Name="wrapItems" Margin="0,4,-16,0"/>
+
+                <!-- 空态 / 读取中：内容少，别拉成一条横幅 -->
+                <Border x:Name="bdEmpty" Style="{StaticResource SoftCardStyle}"
+                        Margin="0,10,0,0" Padding="26,22"
+                        MaxWidth="420" HorizontalAlignment="Left">
+                    <TextBlock x:Name="txtEmptyTitle" Text="正在读取商品…" FontSize="15"
+                               FontWeight="SemiBold" Foreground="{DynamicResource TextSecondary}"/>
+                </Border>
+
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>

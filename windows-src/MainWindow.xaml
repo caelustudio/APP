@@ -1,0 +1,138 @@
+﻿<Window x:Class="MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        mc:Ignorable="d"
+        Title="Caelus Studio"
+        Height="740" Width="1180"
+        MinWidth="960" MinHeight="620"
+        WindowStyle="None"
+        ResizeMode="CanResize"
+        AllowsTransparency="True"
+        Background="Transparent"
+        FontFamily="OPPO Sans 4.0, Microsoft YaHei"
+        WindowStartupLocation="CenterScreen"
+        SnapsToDevicePixels="True"
+        UseLayoutRounding="True"
+        Icon="pack://application:,,,/logo.ico"
+        Activated="Window_Activated"
+        StateChanged="Window_StateChanged">
+
+    <!-- CaptionHeight 设为标题栏高度，让系统接管拖拽 / 双击最大化；
+         标题栏里的按钮必须用 IsHitTestVisibleInChrome 单独放行，否则会被当成标题栏命中（变成拖拽） -->
+    <shell:WindowChrome.WindowChrome>
+        <shell:WindowChrome CaptionHeight="40"
+                            ResizeBorderThickness="6"
+                            GlassFrameThickness="0"
+                            CornerRadius="10"
+                            UseAeroCaptionButtons="False"/>
+    </shell:WindowChrome.WindowChrome>
+
+    <!-- 圆角窗口三件套：窗口透明底 + 外层 Border 画圆角 + SizeChanged 里给 Border 套圆角裁剪。
+         少了裁剪的话，子元素是方形的，会从四个圆角处顶出来 -->
+    <Border x:Name="rootBorder"
+            CornerRadius="10"
+            BorderBrush="{DynamicResource FrameBorder}" BorderThickness="1"
+            Background="{DynamicResource BgPrimary}"
+            ClipToBounds="True"
+            SizeChanged="RootBorder_SizeChanged">
+        <Grid Background="{DynamicResource BgPrimary}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="56"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- ============ 标题栏 ============ -->
+            <Grid x:Name="gridTitle" Grid.Row="0"
+                  Background="{DynamicResource BgPrimary}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Orientation="Horizontal" Margin="16,0,0,0" VerticalAlignment="Center">
+                    <!-- 工作室图标是黑色图形 + 透明底，直接放在浅色背景上，不加底板 -->
+                    <Border Width="22" Height="22" Margin="0,0,10,0" ClipToBounds="True">
+                        <Grid>
+                            <TextBlock x:Name="txtBrandFallback" Text="C"
+                                       Foreground="{DynamicResource TextSecondary}"
+                                       FontSize="13" FontWeight="Bold"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <Border x:Name="hostBrandLogo" Visibility="Collapsed"
+                                    RenderOptions.BitmapScalingMode="HighQuality">
+                                <Border.Background>
+                                    <ImageBrush x:Name="brushBrandLogo" Stretch="Uniform"/>
+                                </Border.Background>
+                            </Border>
+                        </Grid>
+                    </Border>
+                    <TextBlock Text="Caelus Studio" Foreground="{DynamicResource TextSecondary}"
+                               FontSize="13"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Button x:Name="btnMinimize" Style="{StaticResource TitleBarButton}"
+                            shell:WindowChrome.IsHitTestVisibleInChrome="True"
+                            Content="&#xE921;" ToolTip="最小化"/>
+                    <Button x:Name="btnClose" Style="{StaticResource TitleBarCloseButton}"
+                            shell:WindowChrome.IsHitTestVisibleInChrome="True"
+                            Content="&#xE8BB;" ToolTip="关闭" Margin="0,0,6,0"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- ============ 导航栏 ============ -->
+            <Grid Grid.Row="1" Background="{DynamicResource BgPrimary}">
+                <Border BorderBrush="{DynamicResource LineDivider}" BorderThickness="0,0,0,1"/>
+                <Grid Margin="28,0,16,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Orientation="Horizontal">
+                        <Button x:Name="btnNavHome" Style="{StaticResource NavButton}"
+                                Content="主页"/>
+                        <Button x:Name="btnNavDownload" Style="{StaticResource NavButton}"
+                                Content="下载作品"/>
+                        <Button x:Name="btnNavShop" Style="{StaticResource NavButton}"
+                                Content="商店"/>
+                        <Button x:Name="btnNavSettings" Style="{StaticResource NavButton}"
+                                Content="设置"/>
+                        <Button x:Name="btnNavAbout" Style="{StaticResource NavButton}"
+                                Content="关于"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                        <!-- Star ID：未登录显示登录入口，已登录显示昵称并弹出菜单 -->
+                        <Button x:Name="btnStarId" Content="登录 Star ID"
+                                Style="{StaticResource LinkButton}"
+                                ContextMenuOpening="btnStarId_MenuOpening">
+                            <!-- 右键弹出账号菜单：复制 Star ID / 退出登录（退出放最底下，用分隔线隔开）。
+                                 「Star ID 配置」入口已删：client_id 已内置，用户无需配置（1.2.0） -->
+                            <Button.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem x:Name="miCopyStarId" Header="复制 Star ID"/>
+                                    <Separator/>
+                                    <MenuItem x:Name="miLogout" Header="退出登录"/>
+                                </ContextMenu>
+                            </Button.ContextMenu>
+                        </Button>
+                        <Button x:Name="btnWebsite" Content="官网" Style="{StaticResource LinkButton}"
+                                Margin="18,0,0,0"/>
+                        <Button x:Name="btnGithub" Content="GitHub" Style="{StaticResource LinkButton}"
+                                Margin="18,0,0,0"/>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+
+            <!-- ============ 页面容器 ============ -->
+            <Frame x:Name="MainFrame" Grid.Row="2"
+                   NavigationUIVisibility="Hidden"
+                   Background="{DynamicResource BgPrimary}"
+                   Focusable="False"/>
+        </Grid>
+    </Border>
+</Window>

@@ -1,0 +1,112 @@
+﻿<UserControl x:Class="ShopCard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             Width="318"
+             FontFamily="OPPO Sans 4.0, Microsoft YaHei"
+             SnapsToDevicePixels="True"
+             UseLayoutRounding="True">
+
+    <!-- 与 DownloadCard 同一套分层：外层只画背景和阴影，文字一律待在 Effect 之外 -->
+    <Grid Margin="0,0,16,16">
+        <Border CornerRadius="16" Background="{DynamicResource BgCard}"
+                Effect="{DynamicResource CardShadow}" SnapsToDevicePixels="True"/>
+
+        <Border CornerRadius="16" Background="Transparent"
+                BorderBrush="{DynamicResource LineSoft}" BorderThickness="1"
+                ClipToBounds="True" SnapsToDevicePixels="True">
+            <StackPanel>
+
+                <!-- ============ 商品图 ============ -->
+                <Grid Height="200">
+                    <Border CornerRadius="16,16,0,0" ClipToBounds="True">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop Color="{DynamicResource IconAltStart}" Offset="0"/>
+                                <GradientStop Color="{DynamicResource IconAltEnd}" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                    </Border>
+
+                    <!-- 没配图时只留一个大字，保持留白干净 -->
+                    <TextBlock x:Name="txtFallback" Text="?"
+                               FontSize="56" FontWeight="Bold"
+                               Foreground="{DynamicResource IconAltText}"
+                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+                    <Border x:Name="hostImage" CornerRadius="16,16,0,0" Visibility="Collapsed"
+                            RenderOptions.BitmapScalingMode="HighQuality" ClipToBounds="True">
+                        <Border.Background>
+                            <ImageBrush x:Name="brushImage" Stretch="UniformToFill"/>
+                        </Border.Background>
+                    </Border>
+
+                    <!-- 角标 -->
+                    <Border x:Name="bdTag" Style="{StaticResource Tag}"
+                            HorizontalAlignment="Right" VerticalAlignment="Top"
+                            Margin="0,12,12,0" Visibility="Collapsed">
+                        <TextBlock x:Name="txtTag" Style="{StaticResource TagTextStyle}"/>
+                    </Border>
+                </Grid>
+
+                <!-- ============ 名称 / 描述 ============ -->
+                <StackPanel Margin="20,16,20,0">
+                    <TextBlock x:Name="txtName" Text="-" FontSize="18" FontWeight="Bold"
+                               Foreground="{DynamicResource TextPrimary}"
+                               TextTrimming="CharacterEllipsis"/>
+                    <TextBlock x:Name="txtDescription" Text="" FontSize="13"
+                               Foreground="{DynamicResource TextMuted}"
+                               LineHeight="21" TextWrapping="Wrap"
+                               Margin="0,8,0,0" Height="63" TextTrimming="CharacterEllipsis"/>
+                </StackPanel>
+
+                <Border Height="1" Background="{DynamicResource LineDivider}"
+                        Margin="20,14,20,0"/>
+
+                <!-- ============ 价格 + 购买 ============ -->
+                <Grid Margin="20,14,20,18">
+                    <TextBlock x:Name="txtPrice" Text="免费" FontSize="19" FontWeight="Bold"
+                               Foreground="{DynamicResource AccentText}"
+                               VerticalAlignment="Center"/>
+                    <Button x:Name="btnBuy" Style="{StaticResource PrimaryButton}"
+                            Content="立即购买" Padding="18,8" FontSize="13.5"
+                            HorizontalAlignment="Right"/>
+                </Grid>
+
+                <!-- ============ 下载区（只有开放下载的商品才显示） ============ -->
+                <Border x:Name="panelDownload" BorderBrush="{DynamicResource LineSoft}"
+                        BorderThickness="0,1,0,0" Background="{DynamicResource BgElevated}"
+                        Padding="20,14" Visibility="Collapsed">
+                    <StackPanel>
+                        <Grid>
+                            <TextBlock x:Name="txtStatus" Text="可获取数字内容" FontSize="12.5"
+                                       Foreground="{DynamicResource TextSubtle}"
+                                       TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="txtPercent" Text="" FontSize="12.5"
+                                       Foreground="{DynamicResource TextPrimary}"
+                                       HorizontalAlignment="Right"
+                                       VerticalAlignment="Center"/>
+                        </Grid>
+
+                        <ProgressBar x:Name="pbDownload" Style="{StaticResource CaelusProgressBar}"
+                                     Height="6" Margin="0,9,0,0" Visibility="Collapsed"/>
+
+                        <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                            <Button x:Name="btnDownload" Style="{StaticResource PrimaryButton}"
+                                    Content="下载" Padding="16,7" FontSize="13"/>
+                            <Button x:Name="btnCancel" Style="{StaticResource GhostButton}"
+                                    Content="取消" Padding="16,7" FontSize="13"
+                                    Margin="10,0,0,0" Visibility="Collapsed"/>
+                            <Button x:Name="btnOpenFolder" Style="{StaticResource GhostButton}"
+                                    Content="打开文件夹" Padding="16,7" FontSize="13"
+                                    Margin="10,0,0,0" IsEnabled="False"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

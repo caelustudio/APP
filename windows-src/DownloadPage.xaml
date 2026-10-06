@@ -1,0 +1,71 @@
+﻿<Page x:Class="DownloadPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="clr-namespace:Caelus_Studio"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      mc:Ignorable="d"
+      Title="下载作品"
+      Background="{DynamicResource BgPrimary}"
+      FontFamily="OPPO Sans 4.0, Microsoft YaHei">
+
+    <Page.RenderTransform>
+        <TranslateTransform/>
+    </Page.RenderTransform>
+
+    <!-- 入场：淡入 + 上滑 -->
+    <Page.Triggers>
+        <EventTrigger RoutedEvent="Loaded">
+            <BeginStoryboard>
+                <Storyboard Completed="EnterAnim_Completed">
+                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                     From="0" To="1" Duration="0:0:0.35"/>
+                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                     From="18" To="0" Duration="0:0:0.42">
+                        <DoubleAnimation.EasingFunction>
+                            <CubicEase EasingMode="EaseOut"/>
+                        </DoubleAnimation.EasingFunction>
+                    </DoubleAnimation>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+    </Page.Triggers>
+
+    <Grid ClipToBounds="True">
+
+        <!-- 铺满窗口宽度：靠 Margin 留一点白即可。
+             HorizontalContentAlignment 必须显式设 Stretch，ScrollViewer 默认是 Left，
+             不设的话子元素会按内容宽度收缩（内容少时就缩在中间一小块） -->
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+                      HorizontalContentAlignment="Stretch">
+            <StackPanel Margin="32,36,32,44">
+
+                <TextBlock Text="下载作品" Style="{StaticResource TypeDisplay}"
+                           Foreground="{DynamicResource TextPrimary}"/>
+                <TextBlock FontSize="14" Foreground="{DynamicResource TextMuted}"
+                           Margin="0,8,0,10" TextWrapping="Wrap" LineHeight="24">
+                    获取 Caelus Studio 的作品文件，应用内直接下载并实时显示进度。
+                </TextBlock>
+
+                <!-- 云端配置同步状态：读到配置后才显示，让人知道页面是实时的 -->
+                <TextBlock x:Name="txtSync" FontSize="12"
+                           Foreground="{DynamicResource TextFaint}"
+                           Margin="0,0,0,16" Visibility="Collapsed"/>
+
+                <!-- 下载位置已在「设置」页统一管理 -->
+                <!-- TreeOS -->
+                <local:DownloadCard x:Name="cardTreeOs"
+                                    ItemName="TreeOS"
+                                    FallbackLetter="T"
+                                    DescriptionText="由 Caelus Studio 打造的 PPT 系统作品。点击「下载」即可获取最新版本，应用内实时显示进度。"/>
+
+                <!-- CaelusOS -->
+                <local:DownloadCard x:Name="cardCaelusOs" Margin="0,18,0,0"
+                                    ItemName="CaelusOS"
+                                    FallbackLetter="C"
+                                    DescriptionText="由 Caelus Studio 打造的 PPT 系统作品。点击「下载」即可获取最新版本，应用内实时显示进度。"/>
+
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>

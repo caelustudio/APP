@@ -1,0 +1,9 @@
+# windows-src 是 VB.NET/WPF 源码（带 UTF-8 BOM），必须逐字节原样进出，
+# 不能让 git 做行尾转换，否则 BOM/编码被改会触发编译器乱码或 XAML 解析失败。
+windows-src/** -text
+
+# Update/ 里的产物是二进制，不做任何转换（GitHub Pages 直接分发）
+Update/** -text
+Updat/** -text
+CaelusOS/** -text
+TreeOS/** -text

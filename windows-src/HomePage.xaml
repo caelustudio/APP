@@ -1,0 +1,177 @@
+﻿<Page x:Class="HomePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      mc:Ignorable="d"
+      Title="主页"
+      Background="{DynamicResource BgPrimary}"
+      FontFamily="OPPO Sans 4.0, Microsoft YaHei">
+
+    <Page.RenderTransform>
+        <TranslateTransform/>
+    </Page.RenderTransform>
+
+    <!-- 入场：淡入 + 上滑 -->
+    <Page.Triggers>
+        <EventTrigger RoutedEvent="Loaded">
+            <BeginStoryboard>
+                <Storyboard Completed="EnterAnim_Completed">
+                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                     From="0" To="1" Duration="0:0:0.35"/>
+                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                     From="18" To="0" Duration="0:0:0.42">
+                        <DoubleAnimation.EasingFunction>
+                            <CubicEase EasingMode="EaseOut"/>
+                        </DoubleAnimation.EasingFunction>
+                    </DoubleAnimation>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+    </Page.Triggers>
+
+    <Grid ClipToBounds="True">
+
+        <!-- 铺满窗口宽度：靠 Margin 留一点白。
+             HorizontalContentAlignment 必须显式设 Stretch，ScrollViewer 默认是 Left -->
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+                      HorizontalContentAlignment="Stretch">
+            <StackPanel Margin="32,44,32,48">
+
+                <!-- 工作室图标：黑色图形 + 透明底，直接放在页面背景上 -->
+                <Border Width="72" Height="72" HorizontalAlignment="Left"
+                        Margin="0,0,0,22" ClipToBounds="True">
+                    <Grid>
+                        <TextBlock x:Name="txtLogoFallback" Text="C" FontSize="28" FontWeight="Bold"
+                                   Foreground="{DynamicResource TextMuted}"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Border x:Name="hostLogo" Visibility="Collapsed"
+                                RenderOptions.BitmapScalingMode="HighQuality">
+                            <Border.Background>
+                                <ImageBrush x:Name="brushLogo" Stretch="Uniform"/>
+                            </Border.Background>
+                        </Border>
+                    </Grid>
+                </Border>
+
+                <!-- Hero -->
+                <Border Style="{StaticResource Tag}" HorizontalAlignment="Left" Margin="0,0,0,20">
+                    <TextBlock Text="CAELUS STUDIO" Style="{StaticResource TagTextStyle}"/>
+                </Border>
+
+                <TextBlock Text="Begin With Design, Believe In Design."
+                           FontSize="40" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}"
+                           TextWrapping="Wrap"/>
+                <TextBlock Text="始于设计，忠于设计。"
+                           FontSize="22" Foreground="{DynamicResource TextSecondary}"
+                           Margin="0,14,0,0"/>
+                <TextBlock FontSize="14.5" Foreground="{DynamicResource TextMuted}"
+                           Margin="0,18,0,0" MaxWidth="760" HorizontalAlignment="Left"
+                           TextWrapping="Wrap" LineHeight="26">
+                    一切皆由 PowerPoint 打造。我们相信，PowerPoint 能打造一切。从 PPT 系统到 PPT 动画，
+                    想到的都能做出来。设计，不只是活的，也可以是静的。静态界面设计、动态动画设计，缺一不可。
+                </TextBlock>
+
+                <StackPanel Orientation="Horizontal" Margin="0,28,0,0">
+                    <Button x:Name="btnWebsite" Style="{StaticResource PrimaryButton}"
+                            Content="访问官网"/>
+                    <Button x:Name="btnAbout" Style="{StaticResource GhostButton}" Content="关于我们"
+                            Margin="14,0,0,0"/>
+                </StackPanel>
+
+                <!-- 数据 -->
+                <Grid Margin="0,46,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="16"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="16"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0" Style="{StaticResource SoftCardStyle}">
+                        <StackPanel>
+                            <TextBlock Text="2" FontSize="34" FontWeight="Bold"
+                                       Foreground="{DynamicResource TextPrimary}"/>
+                            <TextBlock Text="年设计经验" FontSize="13"
+                                       Foreground="{DynamicResource TextMuted}" Margin="0,6,0,0"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Column="2" Style="{StaticResource SoftCardStyle}">
+                        <StackPanel>
+                            <TextBlock Text="11" FontSize="34" FontWeight="Bold"
+                                       Foreground="{DynamicResource TextPrimary}"/>
+                            <TextBlock Text="个作品" FontSize="13"
+                                       Foreground="{DynamicResource TextMuted}" Margin="0,6,0,0"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Column="4" Style="{StaticResource SoftCardStyle}">
+                        <StackPanel>
+                            <TextBlock Text="∞" FontSize="34" FontWeight="Bold"
+                                       Foreground="{DynamicResource Accent}"/>
+                            <TextBlock Text="创意" FontSize="13"
+                                       Foreground="{DynamicResource TextMuted}" Margin="0,6,0,0"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <!-- 关于 -->
+                <TextBlock x:Name="txtAboutSection" Text="关于我们" FontSize="20" FontWeight="Bold"
+                           Foreground="{DynamicResource TextPrimary}" Margin="0,44,0,16"/>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="16"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="16"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0" Style="{StaticResource CardStyle}">
+                        <StackPanel>
+                            <TextBlock Text="专业、丰富的设计" FontSize="16" FontWeight="SemiBold"
+                                       Foreground="{DynamicResource TextPrimary}"/>
+                            <TextBlock FontSize="13" Foreground="{DynamicResource TextMuted}"
+                                       Margin="0,10,0,0" TextWrapping="Wrap" LineHeight="22">
+                                2 年设计经验，创作出许多作品，包括 XyangOS、StarOS、CaelusOS、
+                                星乐海集团账号服务。我们懂得了：任何作品都值得反复深挖。
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Column="2" Style="{StaticResource CardStyle}">
+                        <StackPanel>
+                            <TextBlock Text="PPT 系统" FontSize="16" FontWeight="SemiBold"
+                                       Foreground="{DynamicResource TextPrimary}"/>
+                            <TextBlock FontSize="13" Foreground="{DynamicResource TextMuted}"
+                                       Margin="0,10,0,0" TextWrapping="Wrap" LineHeight="22">
+                                从 PPT 系统到 PPT 动画，一切皆由 PowerPoint 打造。
+                                静态界面设计与动态动画设计并重，想到的都能做出来。
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Column="4" Style="{StaticResource CardStyle}">
+                        <StackPanel>
+                            <TextBlock Text="反复深挖" FontSize="16" FontWeight="SemiBold"
+                                       Foreground="{DynamicResource TextPrimary}"/>
+                            <TextBlock FontSize="13" Foreground="{DynamicResource TextMuted}"
+                                       Margin="0,10,0,0" TextWrapping="Wrap" LineHeight="22">
+                                任何作品都值得反复深挖。我们不追求快，只追求把每一处细节做到位。
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <!-- 页脚 -->
+                <TextBlock Margin="0,46,0,0" FontSize="12" Foreground="{DynamicResource TextFaint}">
+                    © 2026 Caelus Studio · 始于设计，忠于设计
+                </TextBlock>
+
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>

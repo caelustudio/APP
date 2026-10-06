@@ -1,0 +1,519 @@
+﻿<Application x:Class="Application"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:Caelus_Studio"
+    StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+
+            <!-- ============ 配色（白色主题，对齐 caelus.top 浅色模式） ============ -->
+
+            <!-- 背景 -->
+            <SolidColorBrush x:Key="BgPrimary"     Color="#FFF2F3F5"/>
+            <SolidColorBrush x:Key="BgSecondary"   Color="#FFFFFFFF"/>
+            <SolidColorBrush x:Key="BgCard"        Color="#FFFFFFFF"/>
+            <SolidColorBrush x:Key="BgElevated"    Color="#FFF7F8FA"/>
+            <SolidColorBrush x:Key="BgHover"       Color="#FFECEEF1"/>
+
+            <!-- 描边 -->
+            <SolidColorBrush x:Key="LineSoft"      Color="#0F000000"/>
+            <SolidColorBrush x:Key="LineStrong"    Color="#1A000000"/>
+            <SolidColorBrush x:Key="LineDivider"   Color="#FFE9EAEE"/>
+            <SolidColorBrush x:Key="FrameBorder"   Color="#FFDDE0E5"/>
+
+            <!-- 文字（近黑，不用纯黑；冷灰阶统一） -->
+            <SolidColorBrush x:Key="TextPrimary"   Color="#FF0F1115"/>
+            <SolidColorBrush x:Key="TextSecondary" Color="#FF2A2E36"/>
+            <SolidColorBrush x:Key="TextMuted"     Color="#FF565C66"/>
+            <SolidColorBrush x:Key="TextSubtle"    Color="#FF6B7178"/>
+            <SolidColorBrush x:Key="TextFaint"     Color="#FF99A0A8"/>
+
+            <!-- 强调：单一低饱和深蓝，全站统一（去掉亮蓝渐变与辉光） -->
+            <SolidColorBrush x:Key="Accent"        Color="#FF1C4E89"/>
+            <SolidColorBrush x:Key="AccentDeep"    Color="#FFEAF1F9"/>
+            <SolidColorBrush x:Key="AccentText"    Color="#FF143B66"/>
+            <SolidColorBrush x:Key="Danger"        Color="#FFC0392B"/>
+            <SolidColorBrush x:Key="SuccessText"   Color="#FF1C4E89"/>
+
+            <!-- 标签 -->
+            <SolidColorBrush x:Key="TagBg"         Color="#FFEAF1F9"/>
+            <SolidColorBrush x:Key="TagBorder"     Color="#261C4E89"/>
+            <SolidColorBrush x:Key="TagText"       Color="#FF143B66"/>
+
+            <!-- 主按钮：纯色填充，去掉渐变与辉光 -->
+            <SolidColorBrush x:Key="BtnBrush"        Color="#FF1C4E89"/>
+            <SolidColorBrush x:Key="BtnHoverBrush"   Color="#FF163F6E"/>
+            <SolidColorBrush x:Key="BtnBorder"       Color="#FF163F6E"/>
+            <SolidColorBrush x:Key="BtnHoverBorder"  Color="#FF0F3258"/>
+            <SolidColorBrush x:Key="BtnText"         Color="#FFFFFFFF"/>
+
+            <!-- 次按钮 / 链接 -->
+            <SolidColorBrush x:Key="GhostText"        Color="#FF2A2E36"/>
+            <SolidColorBrush x:Key="GhostBorder"      Color="#1A000000"/>
+            <SolidColorBrush x:Key="GhostHoverBg"     Color="#FFECEEF1"/>
+            <SolidColorBrush x:Key="GhostHoverBorder" Color="#33000000"/>
+            <SolidColorBrush x:Key="LinkText"         Color="#FF6B7178"/>
+            <SolidColorBrush x:Key="LinkHover"        Color="#FF143B66"/>
+
+            <!-- 导航 / 标题栏 -->
+            <SolidColorBrush x:Key="NavText"           Color="#FF6B7178"/>
+            <SolidColorBrush x:Key="TitleBtnText"      Color="#FF6B7178"/>
+            <SolidColorBrush x:Key="TitleBtnHover"     Color="#FFE5E5E5"/>
+
+            <!-- 控件 -->
+            <SolidColorBrush x:Key="ProgressTrack" Color="#FFE6E8EC"/>
+            <Color x:Key="ProgressStart">#FF1C4E89</Color>
+            <Color x:Key="ProgressEnd">#FF4F86C6</Color>
+            <SolidColorBrush x:Key="ScrollThumb"   Color="#FFC4C8CE"/>
+
+            <!-- 图标底 -->
+            <Color x:Key="IconStart">#FF1C4E89</Color>
+            <Color x:Key="IconEnd">#FF163F6E</Color>
+            <Color x:Key="IconAltStart">#FFEDF1F6</Color>
+            <Color x:Key="IconAltEnd">#FFDCE3EC</Color>
+            <SolidColorBrush x:Key="IconAltText"  Color="#FF9AA1A9"/>
+            <Color x:Key="BrandStart">#FF1C4E89</Color>
+            <Color x:Key="BrandEnd">#FF163F6E</Color>
+
+            <!-- 阴影：中性冷灰色调，不用纯黑，去掉蓝色辉光 -->
+            <DropShadowEffect x:Key="CardShadow"      Color="#FF1B1F27" BlurRadius="16" ShadowDepth="1" Opacity="0.07"/>
+            <DropShadowEffect x:Key="CardShadowHover" Color="#FF1B1F27" BlurRadius="24" ShadowDepth="6"  Opacity="0.13"/>
+
+            <!-- ============ 设计刻度（Shape / Type 一致性锁） ============
+                 这套刻度是硬规则：任何新增样式都必须从这里取值，不要临时拍数字。
+                   圆角：卡片 16 → 嵌套卡 12 → 控件 10 → 小元素 5 → 胶囊 999（同一个界面不许混用两套体系）
+                   字号：Display 30 / Section 15 / Body 13.5 / Caption 12（正文行高 22）
+                   强调色全局只有一支（Accent 蓝），中性色阶统一冷灰，不混暖灰
+                   阴影一律带底色色调，不用纯黑；按下的反馈用不透明度而不是缩放（避免文字发虚）
+                 -->
+            <CornerRadius x:Key="RadiusCard">16</CornerRadius>
+            <CornerRadius x:Key="RadiusCardInner">12</CornerRadius>
+            <CornerRadius x:Key="RadiusControl">10</CornerRadius>
+            <CornerRadius x:Key="RadiusSmall">5</CornerRadius>
+            <CornerRadius x:Key="RadiusPill">8</CornerRadius>
+
+            <!-- 排版梯度：页面标题 / 区块标题 / 正文 / 辅助说明 -->
+            <Style x:Key="TypeDisplay" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="30"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+                <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+                <Setter Property="SnapsToDevicePixels" Value="True"/>
+            </Style>
+            <Style x:Key="TypeSection" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="15"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+                <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+                <Setter Property="SnapsToDevicePixels" Value="True"/>
+            </Style>
+            <Style x:Key="TypeBody" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="13.5"/>
+                <Setter Property="Foreground" Value="{DynamicResource TextMuted}"/>
+                <Setter Property="TextWrapping" Value="Wrap"/>
+                <Setter Property="LineHeight" Value="22"/>
+                <Setter Property="SnapsToDevicePixels" Value="True"/>
+            </Style>
+            <Style x:Key="TypeCaption" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="12"/>
+                <Setter Property="Foreground" Value="{DynamicResource TextFaint}"/>
+                <Setter Property="SnapsToDevicePixels" Value="True"/>
+            </Style>
+
+            <!-- ============ 卡片 ============ -->
+            <Style x:Key="CardStyle" TargetType="Border">
+                <Setter Property="Background" Value="{DynamicResource BgCard}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource LineSoft}"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="CornerRadius" Value="{StaticResource RadiusCard}"/>
+                <Setter Property="Padding" Value="24"/>
+                <Setter Property="SnapsToDevicePixels" Value="True"/>
+                <Setter Property="Effect" Value="{DynamicResource CardShadow}"/>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="BorderBrush" Value="{DynamicResource LineStrong}"/>
+                        <Setter Property="Effect" Value="{DynamicResource CardShadowHover}"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <!-- 卡片内容层：叠在 CardStyle 之上，本身不带阴影。
+                 文字必须放这一层 —— 带 DropShadowEffect 的 Border 会把整层渲成中间位图，
+                 文字走灰阶抗锯齿会发虚（下载卡片当年就是这么踩的，见 DownloadCard）。 -->
+            <Style x:Key="CardSurface" TargetType="Border">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource LineSoft}"/>
+                <Setter Property="CornerRadius" Value="{StaticResource RadiusCard}"/>
+                <Setter Property="Padding" Value="26"/>
+                <Setter Property="SnapsToDevicePixels" Value="True"/>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="BorderBrush" Value="{DynamicResource LineStrong}"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style x:Key="SoftCardStyle" TargetType="Border">
+                <Setter Property="Background" Value="{DynamicResource BgElevated}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource LineSoft}"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <!-- 嵌套在卡片里的次级卡片：比外层小一档，层级才清楚 -->
+                <Setter Property="CornerRadius" Value="{StaticResource RadiusCardInner}"/>
+                <Setter Property="Padding" Value="20"/>
+                <Setter Property="SnapsToDevicePixels" Value="True"/>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="BorderBrush" Value="{DynamicResource LineStrong}"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <!-- ============ 标签 ============ -->
+            <Style x:Key="Tag" TargetType="Border">
+                <Setter Property="Background" Value="{DynamicResource TagBg}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource TagBorder}"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <!-- 标签走圆角矩形：不再用胶囊，统一圆角矩形化 -->
+                <Setter Property="CornerRadius" Value="{StaticResource RadiusPill}"/>
+                <Setter Property="Padding" Value="10,4"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+            </Style>
+            <!-- 注意：键名不能叫 TagText，会和主题里的同名画笔撞车 -->
+            <Style x:Key="TagTextStyle" TargetType="TextBlock">
+                <Setter Property="Foreground" Value="{DynamicResource TagText}"/>
+                <Setter Property="FontSize" Value="12"/>
+            </Style>
+
+            <!-- ============ 主按钮（悬停放大 + 按下回弹） ============ -->
+            <Style x:Key="PrimaryButton" TargetType="Button">
+                <Setter Property="Foreground" Value="{DynamicResource BtnText}"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="Padding" Value="22,11"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource BtnBorder}"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="bd" CornerRadius="{StaticResource RadiusControl}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    Background="{DynamicResource BtnBrush}">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                  Margin="{TemplateBinding Padding}"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="bd" Property="Background" Value="{DynamicResource BtnHoverBrush}"/>
+                                    <Setter TargetName="bd" Property="BorderBrush" Value="{DynamicResource BtnHoverBorder}"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="bd" Property="Opacity" Value="0.85"/>
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Opacity" Value="0.45"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- ============ 次按钮 ============ -->
+            <Style x:Key="GhostButton" TargetType="Button">
+                <Setter Property="Foreground" Value="{DynamicResource GhostText}"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="Padding" Value="18,10"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource GhostBorder}"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="bd" CornerRadius="{StaticResource RadiusControl}"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                  Margin="{TemplateBinding Padding}"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource GhostHoverBg}"/>
+                                    <Setter Property="BorderBrush" Value="{DynamicResource GhostHoverBorder}"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="bd" Property="Opacity" Value="0.8"/>
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Opacity" Value="0.4"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- ============ 文字链接按钮 ============ -->
+            <Style x:Key="LinkButton" TargetType="Button">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Foreground" Value="{DynamicResource LinkText}"/>
+                <Setter Property="FontSize" Value="13"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="Transparent" Padding="4,6">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Foreground" Value="{DynamicResource LinkHover}"/>
+                                </Trigger>
+                                <!-- 按下也要有反馈（状态闭环），用不透明度而不是缩放，避免文字发虚 -->
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter Property="Opacity" Value="0.65"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- ============ 导航按钮（下划线动效） ============ -->
+            <Style x:Key="NavButton" TargetType="Button">
+                <Setter Property="Foreground" Value="{DynamicResource NavText}"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="Padding" Value="18,0"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Grid Background="Transparent">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <ContentPresenter Grid.Row="0" HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center"
+                                                  Margin="{TemplateBinding Padding}"/>
+                                <Border x:Name="Underline" Grid.Row="1" Height="3" CornerRadius="1.5"
+                                        Background="{DynamicResource Accent}"
+                                        Opacity="0" RenderTransformOrigin="0.5,0.5">
+                                    <Border.RenderTransform>
+                                        <ScaleTransform ScaleX="0"/>
+                                    </Border.RenderTransform>
+                                </Border>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+                                </Trigger>
+                                <!-- 按下的即时反馈：下划线先给到 1，不等导航切换完成 -->
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter Property="Opacity" Value="0.6"/>
+                                </Trigger>
+                                <Trigger Property="Tag" Value="Active">
+                                    <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+                                    <Trigger.EnterActions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetName="Underline"
+                                                    Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                                                    To="1" Duration="0:0:0.3">
+                                                    <DoubleAnimation.EasingFunction>
+                                                        <CubicEase EasingMode="EaseOut"/>
+                                                    </DoubleAnimation.EasingFunction>
+                                                </DoubleAnimation>
+                                                <DoubleAnimation Storyboard.TargetName="Underline"
+                                                    Storyboard.TargetProperty="Opacity"
+                                                    To="1" Duration="0:0:0.3"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </Trigger.EnterActions>
+                                    <Trigger.ExitActions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetName="Underline"
+                                                    Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                                                    To="0" Duration="0:0:0.22"/>
+                                                <DoubleAnimation Storyboard.TargetName="Underline"
+                                                    Storyboard.TargetProperty="Opacity"
+                                                    To="0" Duration="0:0:0.22"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </Trigger.ExitActions>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- ============ 标题栏按钮 ============ -->
+            <Style x:Key="TitleBarButton" TargetType="Button">
+                <Setter Property="Width" Value="44"/>
+                <Setter Property="Height" Value="32"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Foreground" Value="{DynamicResource TitleBtnText}"/>
+                <Setter Property="FontSize" Value="11"/>
+                <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" CornerRadius="{StaticResource RadiusSmall}">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="{DynamicResource TitleBtnHover}"/>
+                        <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style x:Key="TitleBarCloseButton" TargetType="Button" BasedOn="{StaticResource TitleBarButton}">
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="#FFE81123"/>
+                        <Setter Property="Foreground" Value="#FFFFFFFF"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <!-- ============ 进度条（带流光，填充真实跟随 Value） ============ -->
+            <local:ProgressWidthConverter x:Key="ProgressWidthConverter"/>
+            <Style x:Key="CaelusProgressBar" TargetType="ProgressBar">
+                <Setter Property="Height" Value="10"/>
+                <Setter Property="Minimum" Value="0"/>
+                <Setter Property="Maximum" Value="100"/>
+                <Setter Property="Background" Value="{DynamicResource ProgressTrack}"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Foreground" Value="{DynamicResource Accent}"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ProgressBar">
+                            <Border x:Name="PART_Track" Background="{TemplateBinding Background}"
+                                    CornerRadius="5" ClipToBounds="True">
+                                <!-- IndicatorFill 的宽由 Value 决定（不再依赖框架内部 Arrange，
+                                     保证每次 Value 变化进度条都实时跟随；命名为 IndicatorFill
+                                     而非 PART_Indicator，避免框架把宽度改回默认导致不动） -->
+                                <Grid x:Name="IndicatorFill" HorizontalAlignment="Left" ClipToBounds="True">
+                                    <Grid.Width>
+                                        <MultiBinding Converter="{StaticResource ProgressWidthConverter}">
+                                            <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Value"/>
+                                            <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Maximum"/>
+                                            <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="ActualWidth"/>
+                                        </MultiBinding>
+                                    </Grid.Width>
+                                    <Border CornerRadius="5" ClipToBounds="True">
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                <GradientStop Color="{DynamicResource ProgressStart}" Offset="0"/>
+                                                <GradientStop Color="{DynamicResource ProgressEnd}" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Border.Background>
+                                        <Rectangle x:Name="Shine" Width="70" HorizontalAlignment="Left"
+                                                   Opacity="0.4">
+                                            <Rectangle.Fill>
+                                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                    <GradientStop Color="#00FFFFFF" Offset="0"/>
+                                                    <GradientStop Color="#FFFFFFFF" Offset="0.5"/>
+                                                    <GradientStop Color="#00FFFFFF" Offset="1"/>
+                                                </LinearGradientBrush>
+                                            </Rectangle.Fill>
+                                            <Rectangle.RenderTransform>
+                                                <TranslateTransform X="-70"/>
+                                            </Rectangle.RenderTransform>
+                                            <!-- 流光动画挂在它自己身上：Storyboard 不写 TargetName，
+                                                 目标是「触发它的元素」本身，不经过模板名称领域解析。
+                                                 以前写成 ControlTemplate.Triggers + TargetName="Shine"，
+                                                 在多个窗口共用这个样式时会抛
+                                                 「无法在 ControlTemplate 的名称领域内找到 Shine 名称」 -->
+                                            <Rectangle.Triggers>
+                                                <EventTrigger RoutedEvent="Loaded">
+                                                    <BeginStoryboard>
+                                                        <Storyboard RepeatBehavior="Forever">
+                                                            <DoubleAnimation
+                                                                Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                                                                From="-70" To="1200" Duration="0:0:2"/>
+                                                        </Storyboard>
+                                                    </BeginStoryboard>
+                                                </EventTrigger>
+                                            </Rectangle.Triggers>
+                                        </Rectangle>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <!-- 下载完成后（Value 到顶）停掉流光，进度条定格不再「乱动」 -->
+                                <DataTrigger Binding="{Binding Value, RelativeSource={RelativeSource TemplatedParent}}"
+                                             Value="100">
+                                    <Setter TargetName="Shine" Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- ============ 滚动条 ============ -->
+            <Style x:Key="ScrollBarThumb" TargetType="Thumb">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Thumb">
+                            <Border Background="{DynamicResource ScrollThumb}" CornerRadius="4" Margin="2,0"/>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style x:Key="ScrollBarPageButton" TargetType="RepeatButton">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="RepeatButton">
+                            <Border Background="Transparent"/>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style TargetType="ScrollBar">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Width" Value="10"/>
+                <Setter Property="MinWidth" Value="10"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ScrollBar">
+                            <Grid Background="Transparent" SnapsToDevicePixels="True">
+                                <Track x:Name="PART_Track" IsDirectionReversed="True">
+                                    <Track.DecreaseRepeatButton>
+                                        <RepeatButton Style="{StaticResource ScrollBarPageButton}"
+                                                      Command="ScrollBar.PageUpCommand" IsTabStop="False"/>
+                                    </Track.DecreaseRepeatButton>
+                                    <Track.IncreaseRepeatButton>
+                                        <RepeatButton Style="{StaticResource ScrollBarPageButton}"
+                                                      Command="ScrollBar.PageDownCommand" IsTabStop="False"/>
+                                    </Track.IncreaseRepeatButton>
+                                    <Track.Thumb>
+                                        <Thumb Style="{StaticResource ScrollBarThumb}" IsTabStop="False"/>
+                                    </Track.Thumb>
+                                </Track>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

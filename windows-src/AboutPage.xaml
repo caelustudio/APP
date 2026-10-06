@@ -1,0 +1,220 @@
+﻿<Page x:Class="AboutPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      mc:Ignorable="d"
+      Title="关于"
+      Background="{DynamicResource BgPrimary}"
+      FontFamily="OPPO Sans 4.0, Microsoft YaHei"
+      SnapsToDevicePixels="True"
+      UseLayoutRounding="True"
+      RenderOptions.BitmapScalingMode="HighQuality">
+
+    <Page.RenderTransform>
+        <TranslateTransform/>
+    </Page.RenderTransform>
+
+    <!-- 入场：淡入 + 上滑 -->
+    <Page.Triggers>
+        <EventTrigger RoutedEvent="Loaded">
+            <BeginStoryboard>
+                <Storyboard Completed="EnterAnim_Completed">
+                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                     From="0" To="1" Duration="0:0:0.35"/>
+                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                     From="18" To="0" Duration="0:0:0.42">
+                        <DoubleAnimation.EasingFunction>
+                            <CubicEase EasingMode="EaseOut"/>
+                        </DoubleAnimation.EasingFunction>
+                    </DoubleAnimation>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+    </Page.Triggers>
+
+    <Grid ClipToBounds="True">
+
+        <!-- 铺满窗口宽度：靠 Margin 留一点白。
+             HorizontalContentAlignment 必须显式设 Stretch，ScrollViewer 默认是 Left -->
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+                      HorizontalContentAlignment="Stretch">
+            <StackPanel Margin="32,36,32,44">
+
+                <TextBlock Text="关于" Style="{StaticResource TypeDisplay}"
+                           Foreground="{DynamicResource TextPrimary}"/>
+                <TextBlock FontSize="14" Foreground="{DynamicResource TextMuted}"
+                           Margin="0,8,0,26" TextWrapping="Wrap" LineHeight="24">
+                    认识 Caelus Studio —— 以及一路帮过忙的人。
+                </TextBlock>
+
+                <!-- ============ 作者 ============ -->
+                <TextBlock Text="作者" Style="{StaticResource TypeSection}"
+                           Foreground="{DynamicResource TextPrimary}" Margin="0,0,0,12"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="16"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- 主作者 -->
+                    <Grid Grid.Column="0">
+                        <Border Style="{StaticResource CardStyle}"/>
+                        <Border Style="{StaticResource CardSurface}">
+                            <StackPanel>
+                                <Ellipse Width="96" Height="96" HorizontalAlignment="Left"
+                                         Stroke="{DynamicResource LineStrong}" StrokeThickness="1">
+                                    <Ellipse.Fill>
+                                        <ImageBrush ImageSource="pack://application:,,,/author-croc.jpg"
+                                                    Stretch="UniformToFill"/>
+                                    </Ellipse.Fill>
+                                </Ellipse>
+                                <TextBlock Text="Caelus Studio | 小鳄鱼" FontSize="17" FontWeight="Bold"
+                                           Foreground="{DynamicResource TextPrimary}"
+                                           Margin="0,18,0,0" TextWrapping="Wrap"/>
+                                <Border Style="{StaticResource Tag}" HorizontalAlignment="Left" Margin="0,10,0,0">
+                                    <TextBlock Text="主作者" Style="{StaticResource TagTextStyle}"/>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <!-- 副作者 -->
+                    <Grid Grid.Column="2">
+                        <Border Style="{StaticResource CardStyle}"/>
+                        <Border Style="{StaticResource CardSurface}">
+                            <StackPanel>
+                                <Ellipse Width="96" Height="96" HorizontalAlignment="Left"
+                                         Stroke="{DynamicResource LineStrong}" StrokeThickness="1">
+                                    <Ellipse.Fill>
+                                        <ImageBrush ImageSource="pack://application:,,,/author-orange.jpg"
+                                                    Stretch="UniformToFill"/>
+                                    </Ellipse.Fill>
+                                </Ellipse>
+                                <TextBlock Text="Caelus Studio | Orange" FontSize="17" FontWeight="Bold"
+                                           Foreground="{DynamicResource TextPrimary}"
+                                           Margin="0,18,0,0" TextWrapping="Wrap"/>
+                                <Border Style="{StaticResource Tag}" HorizontalAlignment="Left" Margin="0,10,0,0">
+                                    <TextBlock Text="副作者" Style="{StaticResource TagTextStyle}"/>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </Grid>
+
+                <!-- ============ 感谢名单 ============ -->
+                <TextBlock Text="感谢名单" Style="{StaticResource TypeSection}"
+                           Foreground="{DynamicResource TextPrimary}" Margin="0,32,0,12"/>
+                <Border Style="{StaticResource SoftCardStyle}">
+                    <StackPanel Margin="24,18,24,20">
+
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Caelus Star ID" FontSize="13.5" FontWeight="Bold"
+                                       Foreground="{DynamicResource TextSecondary}"
+                                       VerticalAlignment="Top"/>
+                            <TextBlock Grid.Column="1" Margin="16,0,0,0"
+                                       FontSize="13.5" TextWrapping="Wrap" LineHeight="22"
+                                       Foreground="{DynamicResource TextMuted}">
+                                提供统一的账号与登录服务，让应用不用自己维护一套用户体系。
+                            </TextBlock>
+                        </Grid>
+
+                        <Border BorderBrush="{DynamicResource LineSoft}" BorderThickness="0,0,0,1" Margin="0,0,0,12"/>
+
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="参与测试的朋友" FontSize="13.5" FontWeight="Bold"
+                                       Foreground="{DynamicResource TextSecondary}"
+                                       VerticalAlignment="Top"/>
+                            <TextBlock Grid.Column="1" Margin="16,0,0,0"
+                                       FontSize="13.5" TextWrapping="Wrap" LineHeight="22"
+                                       Foreground="{DynamicResource TextMuted}">
+                                每一个反馈、每一次试用，都让这个应用变得更好用。
+                            </TextBlock>
+                        </Grid>
+
+                    </StackPanel>
+                </Border>
+
+                <!-- ============ 应用信息 ============ -->
+                <TextBlock Text="关于本应用" Style="{StaticResource TypeSection}"
+                           Foreground="{DynamicResource TextPrimary}" Margin="0,32,0,12"/>
+                <Border Style="{StaticResource SoftCardStyle}" Padding="24,14">
+                    <StackPanel>
+                        <!-- 每行固定 30px 高、两侧都垂直居中：
+                             LinkButton 的模板自带 Padding="4,6"，比 TextBlock 高，
+                             不统一行高就会像这样错位 -->
+                        <Grid Height="30">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="92"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="应用名称" FontSize="13"
+                                       Foreground="{DynamicResource TextSubtle}"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock x:Name="txtAppName" Grid.Column="1" FontSize="13"
+                                       Foreground="{DynamicResource TextSecondary}"
+                                       VerticalAlignment="Center"/>
+                        </Grid>
+                        <Grid Height="30">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="92"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="版本" FontSize="13"
+                                       Foreground="{DynamicResource TextSubtle}"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock x:Name="txtVersion" Grid.Column="1" FontSize="13"
+                                       Foreground="{DynamicResource TextSecondary}"
+                                       VerticalAlignment="Center"/>
+                        </Grid>
+                        <Grid Height="30">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="92"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="官网" FontSize="13"
+                                       Foreground="{DynamicResource TextSubtle}"
+                                       VerticalAlignment="Center"/>
+                            <!-- Margin 左侧 -4：抵消 LinkButton 模板里的 4px 内边距 -->
+                            <Button x:Name="btnAboutWebsite" Grid.Column="1"
+                                    Style="{StaticResource LinkButton}"
+                                    Content="www.caelus.top"
+                                    HorizontalAlignment="Left" VerticalAlignment="Center"
+                                    Margin="-4,0,0,0"/>
+                        </Grid>
+                        <Grid Height="30">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="92"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="GitHub" FontSize="13"
+                                       Foreground="{DynamicResource TextSubtle}"
+                                       VerticalAlignment="Center"/>
+                            <Button x:Name="btnAboutGithub" Grid.Column="1"
+                                    Style="{StaticResource LinkButton}"
+                                    Content="github.com/caelustudio"
+                                    HorizontalAlignment="Left" VerticalAlignment="Center"
+                                    Margin="-4,0,0,0"/>
+                        </Grid>
+
+                        <Border BorderBrush="{DynamicResource LineSoft}" BorderThickness="0,1,0,0"
+                                Margin="0,14,0,12"/>
+
+                        <TextBlock x:Name="txtCopyright" FontSize="12.5"
+                                   Foreground="{DynamicResource TextFaint}"/>
+                    </StackPanel>
+                </Border>
+
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>
